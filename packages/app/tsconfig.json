@@ -1,20 +1,21 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "incremental": true,
     "baseUrl": "./",
-    "declaration": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "module": "esnext",
-    "moduleResolution": "node",
     "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": false,
+    "strictPropertyInitialization": false,
     "sourceMap": true,
-    "target": "es5",
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "es2020",
     "lib": [
       "es2018",
       "dom"
@@ -27,9 +28,5 @@
         "src/app/@shared"
       ]
     }
-  },
-  "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
   }
 }

@@ -6,6 +6,13 @@
   display: flex;
   flex-direction: column;
 
+  .timeline-wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+    .timeline {
+    }
+  }
+
   .intro {
     font-size: 1.2rem;
     font-style: italic;
@@ -101,7 +108,7 @@
 
     .msg-body {
       border-radius: 0.5rem;
-      margin: 0 .5rem;
+      margin: 0 0.5rem;
       overflow: hidden;
       background: $gray-100;
       box-shadow: 0.1rem 0.1rem 0 #eee;
@@ -122,10 +129,10 @@
       .msg-quote {
         border-radius: 0.5rem;
         display: flex;
-        margin: .5rem .5rem 0;
-        padding: .5rem;
+        margin: 0.5rem 0.5rem 0;
+        padding: 0.5rem;
         background-color: $white;
-        >div {
+        > div {
           margin: 0 1rem;
           font-size: small;
         }

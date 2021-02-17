@@ -24,7 +24,6 @@ const giphyApiUrl = 'https://api.giphy.com/v1/gifs'
 })
 export class TimelineComponent implements OnInit {
 
-  @ViewChild('messageList') messageList: ElementRef
   @ViewChild('messageInput') messageInput: ElementRef
   @ViewChild('fileupload') fileupload: ElementRef
   @ViewChild('giphyP') giphyP: NgbPopover
@@ -161,7 +160,6 @@ export class TimelineComponent implements OnInit {
         })
         await Promise.all(ps)
         this.focusInput()
-        this.scrollToBottom()
       }))
   }
 
@@ -206,7 +204,6 @@ export class TimelineComponent implements OnInit {
         _date: Date.now()
       }
     } as Message)
-    this.scrollToBottom()
 
     const message = await this.messagesRepo.add(data, this.selected)
 
@@ -317,13 +314,6 @@ export class TimelineComponent implements OnInit {
 
   async toggleMark(id: string) {
     await this.boardsRepo.mark(id)
-  }
-
-  scrollToBottom(): void {
-    if (!this.messageList) return
-    setTimeout(() => {
-      this.messageList.nativeElement.scrollTop = this.messageList.nativeElement.scrollHeight
-    }, 100)
   }
 
   focusInput(): void {

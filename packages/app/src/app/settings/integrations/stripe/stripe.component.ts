@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http'
-import { Component, OnInit } from '@angular/core'
-import { ConfigService } from '@balnc/core'
-import * as Stripe from 'stripe'
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { ConfigService } from '@balnc/core';
+import { loadStripe } from '@stripe/stripe-js';
 
 @Component({
   selector: 'app-stripe',
@@ -9,10 +9,10 @@ import * as Stripe from 'stripe'
 })
 export class StripeComponent implements OnInit {
 
-  balance: Stripe.balance.IBalance
-  paymentIntents: Stripe.IList<Stripe.paymentIntents.IPaymentIntent>
+  balance: any// Stripe.Balance
+  paymentIntents: any// Stripe.ApiList<Stripe.PaymentIntent>
 
-  get integrations () {
+  get integrations() {
     return {
       ...{
         stripe: {
@@ -22,16 +22,16 @@ export class StripeComponent implements OnInit {
     }
   }
 
-  constructor (
+  constructor(
     private configService: ConfigService,
     private http: HttpClient
   ) { }
 
-  async ngOnInit () {
+  async ngOnInit() {
     await this.refreshStripe()
   }
 
-  async applyStripe () {
+  async applyStripe() {
     this.configService.update({
       ...this.configService.workspace,
       ...{
@@ -43,19 +43,12 @@ export class StripeComponent implements OnInit {
     await this.refreshStripe()
   }
 
-  async refreshStripe () {
+  async refreshStripe() {
     if (!this.integrations?.stripe?.key) return
 
-    this.balance = await this.http.get<Stripe.balance.IBalance>('https://api.stripe.com/v1/balance', {
-      headers: {
-        Authorization: `Bearer ${this.integrations.stripe.key}`
-      }
-    }).toPromise()
+    const stripe = loadStripe(this.integrations.stripe.key);
 
-    this.paymentIntents = await this.http.get<Stripe.IList<Stripe.paymentIntents.IPaymentIntent>>('https://api.stripe.com/v1/payment_intents', {
-      headers: {
-        Authorization: `Bearer ${this.integrations.stripe.key}`
-      }
-    }).toPromise()
+    // this.balance = await stripe.balance.retrieve();
+    // this.paymentIntents = await stripe.paymentIntents.list();
   }
 }

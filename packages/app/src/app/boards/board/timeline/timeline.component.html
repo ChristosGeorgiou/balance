@@ -1,13 +1,14 @@
 <div *ngIf="(board$|async)?.topic as topic" class="topic" [ngStyle]="{backgroundColor:(board$|async)?.color || '#333'}">
   <small>topic:</small> {{topic}}
 </div>
-<section #messageList class="no-border full">
-  <ng-container *ngIf="messages; else loader">
+<section class="no-border full timeline-wrapper">
+  <div class="timeline" *ngIf="messages; else loader">
     <div *ngIf="messages.length<7" class="intro">
       <h2>Welcome to {{(board$|async)?.name}}</h2>
       <div class="text-muted mb-1">Created at {{(board$|async)?._date|date:"short"}} by
         {{usernames[(board$|async)?.creator] || 'some mysterious guy'}}</div>
-      <div>Post your messages here and please be polite unless you don't have to be! This dumb intro text is dumb.</div>
+      <div>Post your messages here and please be polite unless you don't have to be! This dumb intro text is dumb.
+      </div>
     </div>
     <ng-container *ngIf="messages.length else emptyMessages">
       <ng-container *ngFor="let m of messages;let i = index; trackBy: trackByMessages">
@@ -15,100 +16,95 @@
           {{msgSeperatorDates[m._id]|date:'longDate'}}
         </div>
         <ng-container [ngSwitch]="m.type">
-          <ng-container *ngSwitchCase="'MESSAGE'">
-            <div class="msg-item" [ngClass]="{'own':m.sender === user._id,'merged':merged[m._id]}">
-              <div class="msg-time">{{m._date|date:'HH:mm:ss'}}</div>
-              <div class="msg-avatar">
-                <img [src]="avatars[m.sender] || '/assets/images/no-avatar.png'" [ngbTooltip]="usernames[m.sender]"
-                  placement="bottom" container="body">
+          <div *ngSwitchCase="'MESSAGE'" class="msg-item"
+            [ngClass]="{'own':m.sender === user._id,'merged':merged[m._id]}">
+            <div class="msg-time">{{m._date|date:'HH:mm:ss'}}</div>
+            <div class="msg-avatar">
+              <img [src]="avatars[m.sender] || '/assets/images/no-avatar.png'" [ngbTooltip]="usernames[m.sender]"
+                placement="bottom" container="body">
+            </div>
+            <div class="msg-body">
+              <div *ngIf="m.quote" class="msg-quote">
+                <fa-icon icon="quote-left" class="align-self-start"></fa-icon>
+                <div>
+                  <div><strong>{{m.quote.sender}}</strong></div>
+                  <div [innerHTML]="m.quote.text"></div>
+                  <div><em>{{m.quote._date | date:'medium'}}</em></div>
+                </div>
+                <fa-icon icon="quote-right" class="align-self-end"></fa-icon>
               </div>
-              <div class="msg-body">
-                <div *ngIf="m.quote" class="msg-quote">
-                  <fa-icon icon="quote-left" class="align-self-start"></fa-icon>
-                  <div>
-                    <div><strong>{{m.quote.sender}}</strong></div>
-                    <div [innerHTML]="m.quote.text"></div>
-                    <div><em>{{m.quote._date | date:'medium'}}</em></div>
-                  </div>
-                  <fa-icon icon="quote-right" class="align-self-end"></fa-icon>
-                </div>
-                <div *ngIf="m.text" class="msg-text" [innerHTML]="m.text"></div>
-                <div *ngIf="m.file">
-                  <img *ngIf="previews[m._id].base64" [src]="previews[m._id].base64" alt="m.file"
-                    class="img-fluid img-preview mb-1" (load)="scrollToBottom()">
-                  <ul class="ld-flex align-items-center mb-0 p-2">
-                    <fa-icon icon="arrow-alt-circle-down" class="mr-2"></fa-icon>
-                    <a href="javascript:void" (click)="download(m)" class="mr-2">{{m.file}}</a>
-                    <ng-container *ngIf="previews[m._id].file">
-                      <small>{{previews[m._id].file.length | bytes:0}}</small>
-                    </ng-container>
-                  </ul>
-                </div>
-                <div *ngIf="m.image" class="msg-image">
-                  <img *ngIf="m.image.url" class="img-fluid" [width]="m.image.width" [height]="m.image.height"
-                    [src]="m.image.url | safe:'resourceUrl'" [alt]="m.image.alt" (load)="scrollToBottom()">
-                </div>
-                <ng-container *ngIf="m.metadata">
-                  <ng-container [ngSwitch]="m.metadata.ogType">
-                    <ng-container *ngSwitchCase="'video.other'">
-                      <div class="embed-responsive embed-responsive-16by9">
-                        <iframe class="embed-responsive-item" [src]="m.metadata.ogVideo.url | safe:'resourceUrl'"
-                          (load)="scrollToBottom()" allowfullscreen></iframe>
-                      </div>
-                      <div class="m-3">
+              <div *ngIf="m.text" class="msg-text" [innerHTML]="m.text"></div>
+              <div *ngIf="m.file">
+                <img *ngIf="previews[m._id].base64" [src]="previews[m._id].base64" alt="m.file"
+                  class="img-fluid img-preview mb-1" (load)="scrollToBottom()">
+                <ul class="ld-flex align-items-center mb-0 p-2">
+                  <fa-icon icon="arrow-alt-circle-down" class="mr-2"></fa-icon>
+                  <a href="javascript:void" (click)="download(m)" class="mr-2">{{m.file}}</a>
+                  <ng-container *ngIf="previews[m._id].file">
+                    <small>{{previews[m._id].file.length | bytes:0}}</small>
+                  </ng-container>
+                </ul>
+              </div>
+              <div *ngIf="m.image" class="msg-image">
+                <img *ngIf="m.image.url" class="img-fluid" [width]="m.image.width" [height]="m.image.height"
+                  [src]="m.image.url | safe:'resourceUrl'" [alt]="m.image.alt" (load)="scrollToBottom()">
+              </div>
+              <ng-container *ngIf="m.metadata">
+                <ng-container [ngSwitch]="m.metadata.ogType">
+                  <ng-container *ngSwitchCase="'video.other'">
+                    <div class="embed-responsive embed-responsive-16by9">
+                      <iframe class="embed-responsive-item" [src]="m.metadata.ogVideo.url | safe:'resourceUrl'"
+                        (load)="scrollToBottom()" allowfullscreen></iframe>
+                    </div>
+                    <div class="m-3">
+                      <div class="mb-1"><strong>{{m.metadata.ogTitle}}</strong></div>
+                      <div>{{m.metadata.ogDescription}}</div>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    <div class="media p-3 border-top">
+                      <img *ngIf="m.metadata.ogImage.url" class="align-self-start img-thumbnail mr-3"
+                        [src]="m.metadata.ogImage.url" style="max-width: 200px;" alt="" (load)="scrollToBottom()">
+                      <div class="media-body">
                         <div class="mb-1"><strong>{{m.metadata.ogTitle}}</strong></div>
                         <div>{{m.metadata.ogDescription}}</div>
+                        <div><small class="text-muted">{{m.metadata.ogUrl}}</small></div>
                       </div>
-                    </ng-container>
-                    <ng-container *ngSwitchDefault>
-                      <div class="media p-3 border-top">
-                        <img *ngIf="m.metadata.ogImage.url" class="align-self-start img-thumbnail mr-3"
-                          [src]="m.metadata.ogImage.url" style="max-width: 200px;" alt="" (load)="scrollToBottom()">
-                        <div class="media-body">
-                          <div class="mb-1"><strong>{{m.metadata.ogTitle}}</strong></div>
-                          <div>{{m.metadata.ogDescription}}</div>
-                          <div><small class="text-muted">{{m.metadata.ogUrl}}</small></div>
-                        </div>
-                      </div>
-                    </ng-container>
+                    </div>
                   </ng-container>
                 </ng-container>
-              </div>
-              <div class="msg-menu">
-                <button class="btn btn-sm border-light-outline border-0">
-                  <fa-icon icon="smile"></fa-icon>
+              </ng-container>
+            </div>
+            <div class="msg-menu">
+              <button class="btn btn-sm border-light-outline border-0">
+                <fa-icon icon="smile"></fa-icon>
+              </button>
+              <div ngbDropdown>
+                <button class="btn btn-sm border-light-outline border-0" ngbDropdownToggle>
+                  <fa-icon icon="bars"></fa-icon>
                 </button>
-                <div ngbDropdown>
-                  <button class="btn btn-sm border-light-outline border-0" ngbDropdownToggle>
-                    <fa-icon icon="bars"></fa-icon>
+                <div ngbDropdownMenu>
+                  <button ngbDropdownItem (click)="quoteMessage(m)">
+                    <fa-icon icon="quote-right"></fa-icon> Quote
                   </button>
-                  <div ngbDropdownMenu>
-                    <button ngbDropdownItem (click)="quoteMessage(m)">
-                      <fa-icon icon="quote-right"></fa-icon> Quote
-                    </button>
-                    <button ngbDropdownItem class="text-danger" (click)="deleteMessage(m)">
-                      <fa-icon icon="trash"></fa-icon> Remove
-                    </button>
-                  </div>
+                  <button ngbDropdownItem class="text-danger" (click)="deleteMessage(m)">
+                    <fa-icon icon="trash"></fa-icon> Remove
+                  </button>
                 </div>
               </div>
             </div>
-          </ng-container>
-          <ng-container *ngSwitchCase="'EVENT'">
-            <div class="event-item">
-              <div class="event-time">{{m._date|date:'HH:mm:ss'}}</div>
-              <div class="event-text">{{m.text}} <small>~{{usernames[m.sender]}}</small></div>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchDefault>
-            <div class="msg-broke">
-              Message can not be rendered
-            </div>
-          </ng-container>
+          </div>
+          <div *ngSwitchCase="'EVENT'" class="event-item">
+            <div class="event-time">{{m._date|date:'HH:mm:ss'}}</div>
+            <div class="event-text">{{m.text}} <small>~{{usernames[m.sender]}}</small></div>
+          </div>
+          <div *ngSwitchDefault class="msg-broke">
+            Message can not be rendered
+          </div>
         </ng-container>
       </ng-container>
     </ng-container>
-  </ng-container>
+  </div>
 </section>
 <section class="no-border border-top bg-light">
   <ng-container *ngIf="quote">

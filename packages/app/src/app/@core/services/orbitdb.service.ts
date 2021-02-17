@@ -1,7 +1,4 @@
 import { Injectable, NgZone } from '@angular/core'
-import * as IPFS from 'ipfs'
-import * as IpfsClient from 'ipfs-http-client'
-import * as OrbitDB from 'orbit-db'
 import { Subscription } from 'rxjs'
 import { v4 as uuidv4 } from 'uuid'
 import { OrbitDBIntegration } from '../models/integration'
@@ -39,43 +36,43 @@ export class OrbitDBService {
   }
 
   async setup () {
-    if (!this.ipfs) {
-      console.log('[OrbitDB Service]', `Setup IPFS`)
+    // if (!this.ipfs) {
+    //   console.log('[OrbitDB Service]', `Setup IPFS`)
 
-      if (this.ipfsMode === 'REMOTE') {
-        this.ipfs = IpfsClient('http://localhost:5001')
-      } else {
-        this.ipfs = await IPFS.create({
-          start: true,
-          libp2p: {
-            config: {
-              dht: {
-                enabled: true
-              }
-            }
-          },
-          preload: {
-            enabled: false
-          },
-          config: {
-            Addresses: {
-              Swarm: [
-                '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-webrtc-star'
-                // '/ip4/0.0.0.0/tcp/9090/ws/p2p-webrtc-star/'
-              ]
-            }
-          }
-        })
-      }
-      // this.ipfs.on('error', (e) => {
-      //   console.error(e)
-      // })
-    }
-    if (!this.orbitdb) {
-      console.log('[OrbitDB Service]', `Setup OrbitDB`)
-      this.orbitdb = await OrbitDB.createInstance(this.ipfs)
-      console.log('[OrbitDB Service]', `OrbitDB`, this.orbitdb.id)
-    }
+    //   if (this.ipfsMode === 'REMOTE') {
+    //     // this.ipfs = IpfsClient('http://localhost:5001')
+    //   } else {
+    //     this.ipfs = await IPFS.create({
+    //       start: true,
+    //       libp2p: {
+    //         config: {
+    //           dht: {
+    //             enabled: true
+    //           }
+    //         }
+    //       },
+    //       preload: {
+    //         enabled: false
+    //       },
+    //       config: {
+    //         Addresses: {
+    //           Swarm: [
+    //             '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-webrtc-star'
+    //             // '/ip4/0.0.0.0/tcp/9090/ws/p2p-webrtc-star/'
+    //           ]
+    //         }
+    //       }
+    //     })
+    //   }
+    //   // this.ipfs.on('error', (e) => {
+    //   //   console.error(e)
+    //   // })
+    // }
+    // if (!this.orbitdb) {
+    //   console.log('[OrbitDB Service]', `Setup OrbitDB`)
+    //   this.orbitdb = await OrbitDB.createInstance(this.ipfs)
+    //   console.log('[OrbitDB Service]', `OrbitDB`, this.orbitdb.id)
+    // }
   }
 
   async start () {
