@@ -29,7 +29,7 @@
     "@angular-builders/custom-webpack": "^10.0.1",
     "@angular/animations": "^11.0.0",
     "@angular/cdk": "^11.0.0",
-    "@angular/cli": "^11.0.1",
+    "@angular/cli": "^11.1.0",
     "@angular/common": "^11.0.0",
     "@angular/compiler": "^11.0.0",
     "@angular/compiler-cli": "^11.0.0",
