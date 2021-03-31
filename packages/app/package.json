@@ -72,7 +72,7 @@
     "jasmine-core": "3.6.0",
     "jasmine-spec-reporter": "6.0.0",
     "mustache": "^4.0.1",
-    "ng-packagr": "^11.0.2",
+    "ng-packagr": "^11.2.1",
     "ng2-ace-editor": "^0.3.9",
     "ng2-file-upload": "^1.4.0",
     "ngx-date-fns": "^6.6.0",
